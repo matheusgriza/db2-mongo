@@ -30,13 +30,12 @@ func (u UseCases) GetAllPerson() []models.Person {
 	return persons
 }
 
-func (u UseCases) AddPerson(newPerson models.Person) uuid.UUID {
+func (u UseCases) AddPerson(newPerson models.CreatePersonRequest) (uuid.UUID, error) {
 	repoReq := models.Person{
 		Id:   uuid.New(),
 		Name: newPerson.Name,
 	}
-
 	u.repos.Person.AddPerson(repoReq)
 
-	return repoReq.Id
+	return repoReq.Id, nil
 }

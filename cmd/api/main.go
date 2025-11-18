@@ -1,5 +1,11 @@
 package main
 
+import (
+	"task-api/internal/handlers"
+	"task-api/internal/repositories"
+	"task-api/internal/usecases"
+)
+
 /*
 Sistema de Agenda
 
@@ -20,4 +26,8 @@ Sistema de Agenda
 */
 
 func main() {
+	repos := repositories.New()
+	usecases := usecases.New(repos)
+	handler := handlers.New(usecases)
+	handler.Listen(8080)
 }
