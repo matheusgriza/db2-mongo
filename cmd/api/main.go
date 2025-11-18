@@ -1,6 +1,4 @@
-package api
-
-import "fmt"
+package main
 
 /*
 Sistema de Agenda
@@ -22,5 +20,4 @@ Sistema de Agenda
 */
 
 func main() {
-	fmt.Println("Hola mundo")
 }
