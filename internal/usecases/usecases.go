@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"task-api/internal/models"
 	"task-api/internal/repositories"
 
@@ -17,25 +18,32 @@ func New(repos *repositories.Repositories) *UseCases {
 	}
 }
 
-func (u UseCases) GetPerson(id uuid.UUID) *models.Person {
-	person := u.repos.Person.GetPerson(id)
-	if person == nil {
-		panic("User not found")
+func (u UseCases) GetPerson(ctx context.Context, id uuid.UUID) (*models.Person, error) {
+	person, err := u.repos.Person.GetPerson(ctx, id)
+	if err != nil {
+		return nil, err
 	}
-	return person
+
+	return person, nil
 }
 
-func (u UseCases) GetAllPerson() []models.Person {
-	persons := u.repos.Person.GetAllPerson()
-	return persons
+func (u UseCases) GetAllPerson(ctx context.Context) ([]models.Person, error) {
+	persons, err := u.repos.Person.GetAllPerson(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return persons, nil
 }
 
-func (u UseCases) AddPerson(newPerson models.CreatePersonRequest) (uuid.UUID, error) {
+func (u UseCases) AddPerson(ctx context.Context, newPerson models.CreatePersonRequest) (uuid.UUID, error) {
 	repoReq := models.Person{
 		Id:   uuid.New(),
 		Name: newPerson.Name,
 	}
-	u.repos.Person.AddPerson(repoReq)
 
+	err := u.repos.Person.AddPerson(ctx, repoReq)
+	if err != nil {
+		return uuid.Nil, err
+	}
 	return repoReq.Id, nil
 }

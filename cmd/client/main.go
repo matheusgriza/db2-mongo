@@ -1,37 +1,56 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
+	"context"
 	"fmt"
-	"net/http"
-	"task-api/internal/models"
+	"log"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	req := models.CreatePersonRequest{
-		Name: "Matheus Griza",
-	}
-
-	b, err := json.Marshal(req)
+	uri := "mongodb://root:1234@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.9"
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	resp, err := http.Post("http://localhost:8080/persons", "application/json", bytes.NewReader(b))
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Connected w MongoDB")
+
+	collection := client.Database("testedb").Collection("dummy")
+
+	_, err = collection.InsertOne(context.Background(), map[string]any{
+		"name": "Matheus Doe",
+		"age":  30,
+	})
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted Document")
+
+	cursor, err := collection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	if resp.StatusCode != http.StatusCreated {
-		panic("Erro creating person")
-	}
-	var responseApi models.CreatePersonResponse
-	if err := json.NewDecoder(resp.Body).Decode(&responseApi); err != nil {
-		panic(err)
+	defer cursor.Close(context.Background())
+
+	var users []bson.M
+
+	if (err) = cursor.All(context.Background(), &users); err != nil {
+		log.Fatal(err)
 	}
 
-	fmt.Println("New person created ", responseApi)
+	fmt.Print(users)
+
 }

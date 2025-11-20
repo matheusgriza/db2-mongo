@@ -1,6 +1,7 @@
 package main
 
 import (
+	"task-api/internal/db"
 	"task-api/internal/handlers"
 	"task-api/internal/repositories"
 	"task-api/internal/usecases"
@@ -25,8 +26,11 @@ Sistema de Agenda
 	6 - Excluir um comprmisso
 */
 
+const DATABASE = "first-db"
+
 func main() {
-	repos := repositories.New()
+	db := db.NewMongoClient()
+	repos := repositories.New(db.Database(DATABASE))
 	usecases := usecases.New(repos)
 	handler := handlers.New(usecases)
 	handler.Listen(8080)
