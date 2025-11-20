@@ -47,7 +47,7 @@ func (h Handlers) getPerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNotFound)
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(person)
 
 }
