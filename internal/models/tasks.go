@@ -8,17 +8,28 @@ import (
 
 type Task struct {
 	Id          uuid.UUID
-	date        time.Time
-	description string
-	invited     []Person
+	Title       string
+	Date        time.Time
+	Invited     []uuid.UUID
+	Description string
 }
 
 type CreateTaskRequest struct {
-	date        time.Time `json:date`
-	description string    `json:description`
-	invited     []Person  `json:invited`
+	Date        time.Time   `bson:"date" json:"date"`
+	Invited     []uuid.UUID `bson:"invited" json:"invited`
+	Title       string      `bson:"title" json:"title`
+	Description string      `bson:"description" json:"description"`
 }
 
 type CreateTaskResponse struct {
-	Id uuid.UUID
+	Id uuid.UUID `bson:"_id" json:"id"`
+}
+
+type UpdateTaskRequest struct {
+	Title       string `bson:"title" json:"title`
+	Description string `json:"description"`
+}
+
+type ManageInvitedTask struct {
+	Ids []uuid.UUID `bson: "ids" json:"ids"`
 }

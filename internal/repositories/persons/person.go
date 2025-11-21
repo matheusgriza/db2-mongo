@@ -2,7 +2,6 @@ package persons
 
 import (
 	"context"
-	"fmt"
 	"task-api/internal/models"
 
 	"github.com/google/uuid"
@@ -52,6 +51,17 @@ func (p *Persons) AddPerson(ctx context.Context, newPerson models.Person) error 
 		return err
 	}
 
-	fmt.Print("Document created succesfully")
 	return nil
+}
+
+func (p *Persons) ValidateUUID(ctx context.Context, ids []uuid.UUID) (bool, error) {
+	count, err := p.col.CountDocuments(ctx, bson.M{
+		"_id": bson.M{"$in": ids},
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return count == int64(len(ids)), nil
 }
