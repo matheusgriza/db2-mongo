@@ -29,6 +29,16 @@ func (t *Tasks) GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
 	return &task, nil
 }
 
+func (t *Tasks) DeleteTask(ctx context.Context, id uuid.UUID) (*models.Task, error) {
+	var task models.Task
+	err := t.col.FindOneAndDelete(ctx, bson.M{"id": id}).Decode(&task)
+	if err != nil {
+		return nil, err
+	}
+
+	return &task, nil
+}
+
 func (t Tasks) GetAllTask(ctx context.Context) ([]models.Task, error) {
 	var tasks []models.Task
 

@@ -16,8 +16,8 @@ type Task struct {
 
 type CreateTaskRequest struct {
 	Date        time.Time   `bson:"date" json:"date"`
-	Invited     []uuid.UUID `bson:"invited" json:"invited`
-	Title       string      `bson:"title" json:"title`
+	Invited     []uuid.UUID `bson:"invited" json:"invited"`
+	Title       string      `bson:"title" json:"title"`
 	Description string      `bson:"description" json:"description"`
 }
 
@@ -26,10 +26,10 @@ type CreateTaskResponse struct {
 }
 
 type UpdateTaskRequest struct {
-	Title       string `bson:"title" json:"title`
+	Title       string `bson:"title" json:"title"`
 	Description string `json:"description"`
 }
 
-type ManageInvitedTask struct {
-	Ids []uuid.UUID `bson: "ids" json:"ids"`
+type ManageTaskInvited struct {
+	Ids []uuid.UUID `bson:"ids" json:"ids"`
 }

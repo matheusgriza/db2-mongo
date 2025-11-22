@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (h Handlers) registerUserEndpoints() {
+func (h Handlers) registerPersonEndpoints() {
 	http.HandleFunc("GET /persons", h.getAll)
 	http.HandleFunc("GET /persons/{id}", h.getPerson)
 	http.HandleFunc("POST /persons", h.createPerson)

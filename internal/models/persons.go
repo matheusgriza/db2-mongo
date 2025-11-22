@@ -8,9 +8,9 @@ type Person struct {
 }
 
 type CreatePersonRequest struct {
-	Name string `json:name`
+	Name string `json:"name"`
 }
 
 type CreatePersonResponse struct {
-	NewPersonId uuid.UUID `json:personId`
+	NewPersonId uuid.UUID `json:"personId"`
 }

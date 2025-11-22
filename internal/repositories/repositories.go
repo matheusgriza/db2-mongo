@@ -20,6 +20,7 @@ type Repositories struct {
 
 	Task interface {
 		GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
+		DeleteTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
 		GetAllTask(ctx context.Context) ([]models.Task, error)
 		AddTask(ctx context.Context, newTask models.Task) error
 		UpdateTask(ctx context.Context, id uuid.UUID, task models.UpdateTaskRequest) error

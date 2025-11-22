@@ -1,5 +1,5 @@
 package models
 
 type ErrorResponse struct {
-	Reason string `json:reason`
+	Reason string `json:"reason"`
 }

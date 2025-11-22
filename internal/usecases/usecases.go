@@ -50,9 +50,18 @@ func (u UseCases) AddPerson(ctx context.Context, newPerson models.CreatePersonRe
 }
 
 // should split it in different files
-
 func (u UseCases) GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error) {
 	task, err := u.repos.Task.GetTask(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return task, nil
+}
+
+func (u UseCases) DeleteTask(ctx context.Context, id uuid.UUID) (*models.Task, error) {
+	task, err := u.repos.Task.DeleteTask(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -72,7 +81,7 @@ func (u UseCases) GetAllTask(ctx context.Context) ([]models.Task, error) {
 
 }
 
-func (u UseCases) AddTask(ctx context.Context, newTask models.Task) (uuid.UUID, error) {
+func (u UseCases) AddTask(ctx context.Context, newTask models.CreateTaskRequest) (uuid.UUID, error) {
 	taskReq := models.Task{
 		Id:          uuid.New(),
 		Description: newTask.Description,
@@ -87,7 +96,7 @@ func (u UseCases) AddTask(ctx context.Context, newTask models.Task) (uuid.UUID, 
 	}
 
 	if !valid {
-		return uuid.Nil, errors.New("One or more invited person IDs do not exist")
+		return uuid.Nil, errors.New("one or more invited person IDs do not exist")
 	}
 
 	u.repos.Task.AddTask(ctx, taskReq)
@@ -95,16 +104,48 @@ func (u UseCases) AddTask(ctx context.Context, newTask models.Task) (uuid.UUID, 
 	return taskReq.Id, nil
 }
 
-func (u UseCases) UpdateTask(ctx context.Context, task models.UpdateTaskRequest) (uuid.UUID, error) {
+func (u UseCases) UpdateTask(ctx context.Context, id uuid.UUID, task models.UpdateTaskRequest) (uuid.UUID, error) {
 	// 4 - Alterar titulo e descriçao em um compromisso
-	return uuid.Nil, nil
+	updateReq := models.UpdateTaskRequest{
+		Title:       task.Title,
+		Description: task.Description,
+	}
+	err := u.repos.Task.UpdateTask(ctx, id, updateReq)
+
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	return id, nil
 
 }
 
-func (u UseCases) addInvited(ctx context.Context, id []uuid.UUID) (uuid.UUID, error) {
-	return uuid.Nil, nil
+func (u UseCases) AddInvited(ctx context.Context, task uuid.UUID, ids []uuid.UUID) (uuid.UUID, error) {
+	valid, err := u.repos.Person.ValidateUUID(ctx, ids)
+
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if !valid {
+		return uuid.Nil, errors.New("one or more invited person IDs do not exist")
+	}
+
+	u.repos.Task.AddInvited(ctx, task, ids)
+	return task, nil
 }
 
-func (u UseCases) removeInvited(ctx context.Context, id []uuid.UUID) (uuid.UUID, error) {
-	return uuid.Nil, nil
+func (u UseCases) RemoveInvited(ctx context.Context, task uuid.UUID, ids []uuid.UUID) (uuid.UUID, error) {
+	valid, err := u.repos.Person.ValidateUUID(ctx, ids)
+
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if !valid {
+		return uuid.Nil, errors.New("one or more invited person IDs do not exist")
+	}
+
+	u.repos.Task.RemoveInvited(ctx, task, ids)
+	return task, nil
 }
