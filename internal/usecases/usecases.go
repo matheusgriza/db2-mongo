@@ -84,6 +84,7 @@ func (u UseCases) GetAllTask(ctx context.Context) ([]models.Task, error) {
 func (u UseCases) AddTask(ctx context.Context, newTask models.CreateTaskRequest) (uuid.UUID, error) {
 	taskReq := models.Task{
 		Id:          uuid.New(),
+		Title:       newTask.Title,
 		Description: newTask.Description,
 		Date:        newTask.Date,
 		Invited:     newTask.Invited,
@@ -105,7 +106,6 @@ func (u UseCases) AddTask(ctx context.Context, newTask models.CreateTaskRequest)
 }
 
 func (u UseCases) UpdateTask(ctx context.Context, id uuid.UUID, task models.UpdateTaskRequest) (uuid.UUID, error) {
-	// 4 - Alterar titulo e descriçao em um compromisso
 	updateReq := models.UpdateTaskRequest{
 		Title:       task.Title,
 		Description: task.Description,
@@ -128,7 +128,7 @@ func (u UseCases) AddInvited(ctx context.Context, task uuid.UUID, ids []uuid.UUI
 	}
 
 	if !valid {
-		return uuid.Nil, errors.New("one or more invited person IDs do not exist")
+		return uuid.Nil, errors.New("one or more invited person IDs do not exist or are already in the list")
 	}
 
 	u.repos.Task.AddInvited(ctx, task, ids)

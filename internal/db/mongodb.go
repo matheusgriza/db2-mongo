@@ -12,7 +12,7 @@ import (
 
 func NewMongoClient() *mongo.Client {
 	uri := os.Getenv("MONGO_URI")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)	
 	defer cancel()
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))

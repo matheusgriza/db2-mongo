@@ -55,8 +55,11 @@ func (p *Persons) AddPerson(ctx context.Context, newPerson models.Person) error 
 }
 
 func (p *Persons) ValidateUUID(ctx context.Context, ids []uuid.UUID) (bool, error) {
+	if len(ids) == 0 {
+		return true, nil
+	}
 	count, err := p.col.CountDocuments(ctx, bson.M{
-		"_id": bson.M{"$in": ids},
+		"Id": bson.M{"$in": ids},
 	})
 
 	if err != nil {

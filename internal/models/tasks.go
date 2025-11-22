@@ -7,29 +7,29 @@ import (
 )
 
 type Task struct {
-	Id          uuid.UUID
-	Title       string
-	Date        time.Time
-	Invited     []uuid.UUID
-	Description string
+	Id          uuid.UUID   `bson:"Id" json:"id"`
+	Title       string      `bson:"Title" json:"title"`
+	Date        time.Time   `bson:"Date" json:"date"`
+	Invited     []uuid.UUID `bson:"Invited" json:"invited"`
+	Description string      `bson:"Description" json:"description"`
 }
 
 type CreateTaskRequest struct {
-	Date        time.Time   `bson:"date" json:"date"`
-	Invited     []uuid.UUID `bson:"invited" json:"invited"`
-	Title       string      `bson:"title" json:"title"`
-	Description string      `bson:"description" json:"description"`
+	Date        time.Time   `bson:"Date" json:"date"`
+	Invited     []uuid.UUID `bson:"Invited" json:"invited"`
+	Title       string      `bson:"Title" json:"title"`
+	Description string      `bson:"Description" json:"description"`
 }
 
 type CreateTaskResponse struct {
-	Id uuid.UUID `bson:"_id" json:"id"`
+	Id uuid.UUID `bson:"Id" json:"id"`
 }
 
 type UpdateTaskRequest struct {
-	Title       string `bson:"title" json:"title"`
-	Description string `json:"description"`
+	Title       string `bson:"Title" json:"title"`
+	Description string `bson:"Description" json:"description"`
 }
 
 type ManageTaskInvited struct {
-	Ids []uuid.UUID `bson:"ids" json:"ids"`
+	Invited []uuid.UUID `json:"ids"`
 }

@@ -9,7 +9,7 @@ import (
 )
 
 func (h Handlers) registerTaskEndpoints() {
-	http.HandleFunc("POST /tasks/", h.createTask)
+	http.HandleFunc("POST /tasks", h.createTask)
 	http.HandleFunc("GET /tasks/{id}", h.getTaskById)
 	http.HandleFunc("GET /tasks", h.getTask)
 	http.HandleFunc("PUT /tasks/{id}", h.updateTask)
@@ -157,7 +157,7 @@ func (h Handlers) addInvited(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := h.useCases.AddInvited(ctx, id, req.Ids)
+	task, err := h.useCases.AddInvited(ctx, id, req.Invited)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: err.Error()})
@@ -188,7 +188,7 @@ func (h Handlers) removeInvited(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := h.useCases.RemoveInvited(ctx, id, req.Ids)
+	task, err := h.useCases.RemoveInvited(ctx, id, req.Invited)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: err.Error()})

@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"context"
+	"fmt"
 	"task-api/internal/models"
 
 	"github.com/google/uuid"
@@ -21,7 +22,7 @@ func New(db *mongo.Database) *Tasks {
 
 func (t *Tasks) GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error) {
 	var task models.Task
-	err := t.col.FindOne(ctx, bson.M{"id": id}).Decode(&task)
+	err := t.col.FindOne(ctx, bson.M{"Id": id}).Decode(&task)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +32,7 @@ func (t *Tasks) GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
 
 func (t *Tasks) DeleteTask(ctx context.Context, id uuid.UUID) (*models.Task, error) {
 	var task models.Task
-	err := t.col.FindOneAndDelete(ctx, bson.M{"id": id}).Decode(&task)
+	err := t.col.FindOneAndDelete(ctx, bson.M{"Id": id}).Decode(&task)
 	if err != nil {
 		return nil, err
 	}
@@ -67,10 +68,11 @@ func (t *Tasks) AddTask(ctx context.Context, newTask models.Task) error {
 }
 
 func (t *Tasks) UpdateTask(ctx context.Context, id uuid.UUID, task models.UpdateTaskRequest) error {
+
 	_, err := t.col.UpdateByID(ctx,
 		id,
 		bson.M{
-			"&set": task,
+			"$set": task,
 		})
 
 	if err != nil {
@@ -80,19 +82,25 @@ func (t *Tasks) UpdateTask(ctx context.Context, id uuid.UUID, task models.Update
 }
 
 func (t *Tasks) AddInvited(ctx context.Context, taskId uuid.UUID, personIds []uuid.UUID) error {
-	_, err := t.col.UpdateByID(
+	res, err := t.col.UpdateOne(
 		ctx,
 		taskId,
 		bson.M{
 			"$addToSet": bson.M{
-				"invited": bson.M{
+				"Invited": bson.M{
 					"$each": personIds,
 				},
 			},
 		},
 	)
-	return err
+	if err != nil {
+		return err
+	}
 
+	fmt.Println("Matched:", res.MatchedCount)
+	fmt.Println("Modified:", res.ModifiedCount)
+
+	return err
 }
 
 func (t *Tasks) RemoveInvited(ctx context.Context, taskId uuid.UUID, personIds []uuid.UUID) error {
@@ -101,7 +109,7 @@ func (t *Tasks) RemoveInvited(ctx context.Context, taskId uuid.UUID, personIds [
 		taskId,
 		bson.M{
 			"$pull": bson.M{
-				"invited": bson.M{
+				"Invited": bson.M{
 					"$in": personIds,
 				},
 			},
