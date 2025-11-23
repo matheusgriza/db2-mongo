@@ -1,10 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Person struct {
-	Id   uuid.UUID `json:"Id" bson:"Id"`
-	Name string    `json:"Name" bson:"Name"`
+	Id   primitive.ObjectID `json:"Id" bson:"_id"`
+	Name string             `json:"Name" bson:"Name"`
 }
 
 type CreatePersonRequest struct {
@@ -12,5 +12,5 @@ type CreatePersonRequest struct {
 }
 
 type CreatePersonResponse struct {
-	NewPersonId uuid.UUID `json:"personId"`
+	NewPersonId primitive.ObjectID `json:"personId"`
 }
