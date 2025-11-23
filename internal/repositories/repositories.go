@@ -6,26 +6,26 @@ import (
 	"task-api/internal/repositories/persons"
 	"task-api/internal/repositories/tasks"
 
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repositories struct {
 	Person interface {
-		GetPerson(ctx context.Context, id uuid.UUID) (*models.Person, error)
+		GetPerson(ctx context.Context, id primitive.ObjectID) (*models.Person, error)
 		GetAllPerson(ctx context.Context) ([]models.Person, error)
 		AddPerson(ctx context.Context, newPerson models.Person) error
-		ValidateUUID(ctx context.Context, ids []uuid.UUID) (bool, error)
+		ValidateUUID(ctx context.Context, ids []primitive.ObjectID) (bool, error)
 	}
 
 	Task interface {
-		GetTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
-		DeleteTask(ctx context.Context, id uuid.UUID) (*models.Task, error)
-		GetAllTask(ctx context.Context) ([]models.Task, error)
+		GetTask(ctx context.Context, id primitive.ObjectID) (*models.TaskGet, error)
+		GetAllTask(ctx context.Context) ([]models.TaskGet, error)
+		DeleteTask(ctx context.Context, id primitive.ObjectID) (*models.Task, error)
 		AddTask(ctx context.Context, newTask models.Task) error
-		UpdateTask(ctx context.Context, id uuid.UUID, task models.UpdateTaskRequest) error
-		AddInvited(ctx context.Context, taskId uuid.UUID, personIds []uuid.UUID) error
-		RemoveInvited(ctx context.Context, taskId uuid.UUID, personId []uuid.UUID) error
+		UpdateTask(ctx context.Context, id primitive.ObjectID, task models.UpdateTaskRequest) error
+		AddInvited(ctx context.Context, taskId primitive.ObjectID, personIds []primitive.ObjectID) error
+		RemoveInvited(ctx context.Context, taskId primitive.ObjectID, personId []primitive.ObjectID) error
 	}
 }
 

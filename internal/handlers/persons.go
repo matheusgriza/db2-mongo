@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"task-api/internal/models"
 
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (h Handlers) registerPersonEndpoints() {
@@ -32,7 +32,7 @@ func (h Handlers) getPerson(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	urlParam := r.PathValue("id")
 
-	id, err := uuid.Parse(urlParam)
+	id, err := primitive.ObjectIDFromHex(urlParam)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

@@ -3,27 +3,26 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Task struct {
-	Id          primitive.ObjectID `bson:"Id" json:"id"`
-	Title       string             `bson:"Title" json:"title"`
-	Date        time.Time          `bson:"Date" json:"date"`
-	Invited     []uuid.UUID        `bson:"Invited" json:"invited"`
-	Description string             `bson:"Description" json:"description"`
+	Id          primitive.ObjectID   `bson:"_id" json:"id"`
+	Title       string               `bson:"Title" json:"title"`
+	Date        time.Time            `bson:"Date" json:"date"`
+	Invited     []primitive.ObjectID `bson:"Invited" json:"invited"`
+	Description string               `bson:"Description" json:"description"`
 }
 
 type CreateTaskRequest struct {
-	Date        time.Time   `bson:"Date" json:"date"`
-	Invited     []uuid.UUID `bson:"Invited" json:"invited"`
-	Title       string      `bson:"Title" json:"title"`
-	Description string      `bson:"Description" json:"description"`
+	Date        time.Time            `bson:"Date" json:"date"`
+	Invited     []primitive.ObjectID `bson:"Invited" json:"invited"`
+	Title       string               `bson:"Title" json:"title"`
+	Description string               `bson:"Description" json:"description"`
 }
 
 type CreateTaskResponse struct {
-	Id primitive.ObjectID `bson:"Id" json:"id"`
+	Id primitive.ObjectID `bson:"_id" json:"id"`
 }
 
 type UpdateTaskRequest struct {
@@ -32,5 +31,13 @@ type UpdateTaskRequest struct {
 }
 
 type ManageTaskInvited struct {
-	Invited []primitive.ObjectID `json:"ids"`
+	Invited []primitive.ObjectID `bson:"_id" json:"ids"`
+}
+
+type TaskGet struct {
+	Id          primitive.ObjectID `bson:"_id" json:"id"`
+	Title       string             `bson:"Title" json:"title"`
+	Date        time.Time          `bson:"Date" json:"date"`
+	Invited     []GetTaskPerson    `bson:"Invited" json:"invited"`
+	Description string             `bson:"Description" json:"description"`
 }

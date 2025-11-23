@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"task-api/internal/models"
 
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (h Handlers) registerTaskEndpoints() {
@@ -47,7 +47,7 @@ func (h Handlers) getTaskById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	urlParam := r.PathValue("id")
 
-	id, err := uuid.Parse(urlParam)
+	id, err := primitive.ObjectIDFromHex(urlParam)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -85,7 +85,7 @@ func (h Handlers) deleteTask(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	urlParam := r.PathValue("id")
 
-	id, err := uuid.Parse(urlParam)
+	id, err := primitive.ObjectIDFromHex(urlParam)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -118,7 +118,7 @@ func (h Handlers) updateTask(w http.ResponseWriter, r *http.Request) {
 
 	urlParam := r.PathValue("id")
 
-	taskId, parseErr := uuid.Parse(urlParam)
+	taskId, parseErr := primitive.ObjectIDFromHex(urlParam)
 
 	if parseErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -149,7 +149,7 @@ func (h Handlers) addInvited(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := uuid.Parse(urlParam)
+	id, err := primitive.ObjectIDFromHex(urlParam)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -180,7 +180,7 @@ func (h Handlers) removeInvited(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := uuid.Parse(urlParam)
+	id, err := primitive.ObjectIDFromHex(urlParam)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

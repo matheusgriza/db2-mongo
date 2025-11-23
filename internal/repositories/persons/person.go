@@ -4,8 +4,8 @@ import (
 	"context"
 	"task-api/internal/models"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -17,9 +17,9 @@ func New(db *mongo.Database) *Persons {
 	return &Persons{col: db.Collection("persons")}
 }
 
-func (p *Persons) GetPerson(ctx context.Context, id uuid.UUID) (*models.Person, error) {
+func (p *Persons) GetPerson(ctx context.Context, id primitive.ObjectID) (*models.Person, error) {
 	var person models.Person
-	err := p.col.FindOne(ctx, bson.M{"id": id}).Decode(&person)
+	err := p.col.FindOne(ctx, bson.M{"_id": id}).Decode(&person)
 	if err != nil {
 		return nil, err
 	}
@@ -54,12 +54,12 @@ func (p *Persons) AddPerson(ctx context.Context, newPerson models.Person) error 
 	return nil
 }
 
-func (p *Persons) ValidateUUID(ctx context.Context, ids []uuid.UUID) (bool, error) {
+func (p *Persons) ValidateUUID(ctx context.Context, ids []primitive.ObjectID) (bool, error) {
 	if len(ids) == 0 {
 		return true, nil
 	}
 	count, err := p.col.CountDocuments(ctx, bson.M{
-		"Id": bson.M{"$in": ids},
+		"_id": bson.M{"$in": ids},
 	})
 
 	if err != nil {

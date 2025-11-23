@@ -14,3 +14,8 @@ type CreatePersonRequest struct {
 type CreatePersonResponse struct {
 	NewPersonId primitive.ObjectID `json:"personId"`
 }
+
+type GetTaskPerson struct {
+	Id   primitive.ObjectID `json:"Id" bson:"_id"`
+	Name string             `json:"Name" bson:"Name"`
+}
