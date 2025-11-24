@@ -10,7 +10,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewMongoClient() *mongo.Client {
+func NewDB(db string) *mongo.Database {
+	client := newMongoClient()
+	return client.Database(db)
+}
+
+func newMongoClient() *mongo.Client {
 	uri := os.Getenv("MONGO_URI")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

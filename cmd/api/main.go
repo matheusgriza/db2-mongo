@@ -28,8 +28,7 @@ Sistema de Agenda
 */
 
 func main() {
-	dbClient := db.NewMongoClient()
-	db := dbClient.Database(os.Getenv("MONGO_DATABASE"))
+	db := db.NewDB(os.Getenv("MONGO_DATABASE"))
 	repos := repositories.New(db)
 	usecases := usecases.New(repos)
 	handler := handlers.New(usecases)
